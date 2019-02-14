@@ -1,0 +1,31 @@
+server:
+  port: 9000
+
+spring:
+  application:
+    name: api-gateway
+
+
+eureka:
+  instance:
+    #告诉服务端，如果我20s之内没有给你发心跳，就代表我“死”了，将我踢出掉。
+    lease-expiration-duration-in-seconds: 10
+    #每间隔10s，向服务端发送一次心跳，证明自己依然”存活“
+    lease-renewal-interval-in-seconds: 5
+  client:
+    #表示eureka client间隔多久去拉取服务器注册信息,默认为30秒
+    registry-fetch-interval-seconds: 5
+    #注册中心URL
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
+
+
+zuul:
+   routes:
+     #路由重定向
+     order-service: /apigateway1/**
+     product-service: /apigateway2/**
+   #屏蔽匹配的路由
+   ignored-patterns: /*-service/**
+   #敏感头过滤，这里设置为空，既不过滤任何请求头
+   sensitive-headers:
